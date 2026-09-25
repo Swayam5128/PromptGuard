@@ -72,10 +72,11 @@ function detect(text) {
     addFinding(findings, "PII", "Name", value, 15, "[PERSON]");
   }
 
-  // Government-ID-like patterns commonly pasted into text.
-  const aadhaarRe = /(?<![\d\s-])\d{4}[\s-]\d{4}[\s-]\d{4}(?![\d\s-])/g;
-  for (const m of text.matchAll(aadhaarRe)) {
-    addFinding(findings, "PII", "Government ID", m[0], 35, "[GOV_ID]");
+  // Government-ID-like patterns: require an explicit label so a
+  // 16-digit card number is not misclassified as a 12-digit ID.
+  const aadhaarLabelRe = /\b(?:aadhaar|aadhar|government\s*id|govt\s*id|id\s*number)\s*[:#-]?\s*(\d{4}[\s-]\d{4}[\s-]\d{4})\b/gi;
+  for (const m of text.matchAll(aadhaarLabelRe)) {
+    addFinding(findings, "PII", "Government ID", m[1], 35, "[GOV_ID]");
   }
 
   // Deduplicate overlapping findings by exact value/type.
