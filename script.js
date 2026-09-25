@@ -55,7 +55,6 @@ function detect(text) {
   // Credential / secret patterns.
   const credentialPatterns = [
     { re: /\b(?:api[_ -]?key|secret[_ -]?key|password|passwd|token)\s*[:=]\s*["']?([^\s"',;]+)/gi, label: "Credential", score: 45 },
-    { re: /\bsk-[A-Za-z0-9_-]{16,}\b/g, label: "API Key", score: 45 },
     { re: /\bAKIA[0-9A-Z]{16}\b/g, label: "Cloud Access Key", score: 45 }
   ];
   for (const p of credentialPatterns) {
@@ -79,11 +78,15 @@ function detect(text) {
     addFinding(findings, "PII", "Government ID", m[1], 35, "[GOV_ID]");
   }
 
-  // Deduplicate overlapping findings by exact value/type.
+  // Deduplicate overlapping findings. If the same sensitive value is
+  // detected by multiple credential rules, keep only one finding.
   const unique = [];
   const seen = new Set();
   for (const f of findings) {
-    const key = `${f.type}|${f.label}|${f.value}`;
+    const normalizedValue = f.value.replace(/\s+/g, " ").trim().toLowerCase();
+    const key = f.type === "Credential"
+      ? `credential|${normalizedValue}`
+      : `${f.type}|${f.label}|${normalizedValue}`;
     if (!seen.has(key)) {
       seen.add(key);
       unique.push(f);
