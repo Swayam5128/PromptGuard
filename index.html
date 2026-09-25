@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptGuard — AI Privacy Shield</title>
+  <meta name="description" content="PromptGuard detects sensitive data before an AI prompt is submitted and provides one-click redaction." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="topbar"></div>
+
+  <main class="app-shell">
+    <header class="hero">
+      <div>
+        <div class="brand">PROMPT<span>GUARD</span></div>
+        <p class="tagline">Privacy protection at the point of AI interaction.</p>
+      </div>
+      <div class="status-pill"><span class="dot"></span> Local demo</div>
+    </header>
+
+    <section class="card intro-card">
+      <div>
+        <h1>Check your prompt before it leaves your hands.</h1>
+        <p>Paste or type text below. PromptGuard identifies common personal, credential, and financial data patterns, calculates a simple risk level, and lets you redact sensitive values.</p>
+      </div>
+      <button id="sampleBtn" class="secondary-btn">Load sample</button>
+    </section>
+
+    <section class="grid">
+      <div class="card input-card">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow orange">INPUT</div>
+            <h2>AI prompt</h2>
+          </div>
+          <span id="charCount" class="muted">0 characters</span>
+        </div>
+
+        <textarea id="promptInput" placeholder="Example: My name is Rahul Patel. My email is rahul@gmail.com and my phone is 9876543210."></textarea>
+
+        <div class="action-row">
+          <button id="scanBtn" class="primary-btn">Scan prompt</button>
+          <button id="clearBtn" class="ghost-btn">Clear</button>
+        </div>
+      </div>
+
+      <div class="card result-card">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow teal">DECISION</div>
+            <h2>Privacy risk</h2>
+          </div>
+          <div id="riskBadge" class="risk-badge neutral">Not scanned</div>
+        </div>
+
+        <div class="risk-meter">
+          <div id="riskFill" class="risk-fill"></div>
+        </div>
+        <div class="meter-labels"><span>Low</span><span>Medium</span><span>High</span></div>
+
+        <div class="summary-box">
+          <div class="summary-number" id="findingCount">0</div>
+          <div>
+            <strong>Potential sensitive findings</strong>
+            <p id="summaryText">Run a scan to see detected data.</p>
+          </div>
+        </div>
+
+        <div class="findings">
+          <div class="findings-title">Detected categories</div>
+          <div id="findingList" class="finding-list">
+            <div class="empty-state">No scan results yet.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card safe-card">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow teal">ACTION</div>
+          <h2>Safe-to-send output</h2>
+        </div>
+        <button id="redactBtn" class="primary-btn small" disabled>Redact sensitive data</button>
+      </div>
+
+      <div id="outputBox" class="output-box empty">Scan a prompt first. Redacted text will appear here.</div>
+
+      <div class="privacy-note">
+        <strong>Privacy note:</strong> This demo performs detection in your browser; the typed prompt is not sent to an external AI service.
+      </div>
+    </section>
+
+    <footer>
+      <span>PromptGuard • SYNK SOLVE AI-02</span>
+      <a href="https://github.com/Swayam5128/PromptGuard" target="_blank" rel="noreferrer">GitHub repository</a>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
