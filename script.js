@@ -92,7 +92,24 @@ function detect(text) {
       unique.push(f);
     }
   }
-  return unique;
+  // Final overlap cleanup for credential rules:
+  // "API key: sk-..." can be reported both as a Credential and as an API Key.
+  // Keep the labeled Credential finding and remove the duplicate API Key finding.
+  const credentialValues = new Set(
+    unique
+      .filter(f => f.type === "Credential")
+      .map(f => {
+        const m = f.value.match(/\b(?:api[_ -]?key|secret[_ -]?key|password|passwd|token)\s*[:=]\s*["']?([^\s"',;]+)/i);
+        return m ? m[1].toLowerCase() : f.value.toLowerCase();
+      })
+  );
+
+  const cleaned = unique.filter(f => {
+    if (f.label !== "API Key") return true;
+    return !credentialValues.has(f.value.toLowerCase());
+  });
+
+  return cleaned;
 }
 
 function getRisk(findings) {
