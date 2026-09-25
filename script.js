@@ -66,14 +66,14 @@ function detect(text) {
 
   // Simple name heuristic for demo purposes:
   // catches "my name is <two words>" without claiming full NER coverage.
-  const nameRe = /\bmy\s+name\s+is\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/g;
+  const nameRe = /\bmy\s+name\s+is\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/gi;
   for (const m of text.matchAll(nameRe)) {
     const value = m[1];
     addFinding(findings, "PII", "Name", value, 15, "[PERSON]");
   }
 
   // Government-ID-like patterns commonly pasted into text.
-  const aadhaarRe = /\b\d{4}[\s-]\d{4}[\s-]\d{4}\b/g;
+  const aadhaarRe = /(?<![\d\s-])\d{4}[\s-]\d{4}[\s-]\d{4}(?![\d\s-])/g;
   for (const m of text.matchAll(aadhaarRe)) {
     addFinding(findings, "PII", "Government ID", m[0], 35, "[GOV_ID]");
   }
